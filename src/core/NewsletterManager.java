@@ -1,6 +1,11 @@
-import subscription.Subscriber;
-import subscription.SubscriptionCallback;
-import subscription.SubscriptionForm;
+package core;
+
+import actions.subscription.Subscriber;
+import actions.subscription.SubscriptionCallback;
+import actions.subscription.SubscriptionForm;
+import actions.Actions;
+import actions.ActivityForm;
+import actions.ActivityCallback;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -13,7 +18,7 @@ public class NewsletterManager {
     private final Resources resources;
 
     /**
-     * Constructs a NewsletterManager object.
+     * Constructs a core.NewsletterManager object.
      * @param provider an object that handles newsletters delivery
      * @param resources an object that provides the newsletter's content
      */
@@ -59,7 +64,7 @@ public class NewsletterManager {
     }
 
     /**
-     * Adds a new subscriber based on the subscription form.
+     * Adds a new subscriber based on the actions.subscription form.
      */
     private void addSubscriber() {
         SwingUtilities.invokeLater(() -> {
