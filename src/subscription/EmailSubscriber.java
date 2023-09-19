@@ -1,7 +1,7 @@
 package subscription;
 
 /**
- * A class that represents an email subscriber entity, allowing for receiving newsletters via email.
+ * A class that represents an email subscriber entity, allowing for receiving newsletters via provided email.
  */
 public class EmailSubscriber extends Subscriber {
     private final String email;
@@ -38,3 +38,5 @@ public class EmailSubscriber extends Subscriber {
         return subscriptionType;
     }
 }
+
+
