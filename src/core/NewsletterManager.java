@@ -38,10 +38,30 @@ public class NewsletterManager {
         provider.sendViaSms(resources.getResource());
     }
 
+    public void start() {
+        SwingUtilities.invokeLater(() -> {
+            ActivityForm activityForm = new ActivityForm(new ActivityCallback() {
+                @Override
+                public void onActivityChosen(Actions action) {
+                    if (action == Actions.ADD_SUBSCRIBER) {
+                        addSubscriber();
+                    } else if (action == Actions.REMOVE_SUBSCRIBER) {
+                        removeSubscriber();
+                    } else if (action == Actions.SHOW_NEWS) {
+                        showCurrentNews();
+                    }
+                }
+            });
+
+            activityForm.displayActivityForm();
+
+        });
+    }
+
     /**
      * Adds a new subscriber based on the subscription form.
      */
-    public void addSubscriber() {
+    private void addSubscriber() {
         SwingUtilities.invokeLater(() -> {
             SubscriptionForm subscriptionForm = new SubscriptionForm(new SubscriptionCallback() {
                 @Override
@@ -55,6 +75,10 @@ public class NewsletterManager {
             });
 
             subscriptionForm.displaySubscriptionForm();
+
         });
     }
+
+    private void removeSubscriber() {}
+    private void showCurrentNews() {}
 }

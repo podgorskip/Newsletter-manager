@@ -36,9 +36,33 @@ public class SubscriptionForm extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() == confirmationButton) {
 
+            if (!emailButton.isSelected() && !phoneButton.isSelected()) {
+                notSubscriptionTypeChosen();
+                return;
+            }
+
             String firstName = firstNameField.getText();
+            if (firstName.isEmpty()) {
+                emptyFieldMessage("first name");
+                return;
+            }
+
             String lastName = lastNameField.getText();
+            if (lastName.isEmpty()) {
+                emptyFieldMessage("last name");
+                return;
+            }
+
             String medium = mediumField.getText();
+            if (medium.isEmpty()) {
+                if (type == Subscriber.SubscriptionType.EMAIL) {
+                    emptyFieldMessage("email");
+                    return;
+                } else if (type == Subscriber.SubscriptionType.SMS) {
+                    emptyFieldMessage("phone number");
+                    return;
+                }
+            }
 
             subscriptionCallback.onSubscriptionConfirmed(firstName, lastName, medium, type);
             resetFields();
@@ -146,5 +170,13 @@ public class SubscriptionForm extends JFrame implements ActionListener {
         emailButton.setSelected(false);
         phoneButton.setSelected(false);
         mediumField.setText("");
+    }
+
+    private void emptyFieldMessage(String fieldType) {
+        JOptionPane.showMessageDialog(this, "The " + fieldType + " cannot be empty.");
+    }
+
+    private void notSubscriptionTypeChosen() {
+        JOptionPane.showMessageDialog(this, "A subscription type must be chosen.");
     }
 }
