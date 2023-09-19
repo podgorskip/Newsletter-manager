@@ -1,3 +1,7 @@
+import subscription.EmailSubscriber;
+import subscription.SmsSubscriber;
+import subscription.Subscriber;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
