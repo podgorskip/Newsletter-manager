@@ -29,6 +29,7 @@ public class SubscriptionForm extends JFrame implements ActionListener {
 
     /**
      * Handles actions chosen by a user via button click.
+     * Sends callback after the confirmation button is clicked.
      * @param event the event to be processed
      */
     @Override
@@ -136,6 +137,9 @@ public class SubscriptionForm extends JFrame implements ActionListener {
         setMinimumSize(new Dimension(500, 300));
     }
 
+    /**
+     * Resets all the text fields and the ration button's choice.
+     */
     private void resetFields() {
         firstNameField.setText("");
         lastNameField.setText("");
