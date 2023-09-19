@@ -1,4 +1,4 @@
-package subscription;
+package actions.subscription;
 
 /**
  * An interface that allows to handle data provided by a user.

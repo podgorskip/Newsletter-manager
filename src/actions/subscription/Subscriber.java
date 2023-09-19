@@ -1,4 +1,4 @@
-package subscription;
+package actions.subscription;
 
 /**
  * An abstract class that is a base for more specific subscriber classes depending on a subscription type.
@@ -31,7 +31,7 @@ public abstract class Subscriber {
     public abstract void receive(String content);
 
     /**
-     * An abstract method to return the secified subscription type.
+     * An abstract method to return the specified subscription type.
      * @return a subscription type
      */
     public abstract SubscriptionType getSubscriptionType();

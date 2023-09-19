@@ -1,4 +1,4 @@
-package subscription;
+package actions.subscription;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * A class that displays a subscription form which allows new users to sign up for a specified type of subscription.
+ * A class that displays a subscription form which allows new users to sign up for a specified type of actions.subscription.
  */
 public class SubscriptionForm extends JFrame implements ActionListener {
     private Subscriber.SubscriptionType type;
@@ -16,7 +16,7 @@ public class SubscriptionForm extends JFrame implements ActionListener {
     private final SubscriptionCallback subscriptionCallback;
 
     /**
-     * Constructs a subscription.SubscriptionForm object and initializes it.
+     * Constructs a SubscriptionForm object and initializes it.
      */
     public SubscriptionForm(SubscriptionCallback callback) {
         this.subscriptionCallback = callback;

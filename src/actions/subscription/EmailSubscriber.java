@@ -1,4 +1,4 @@
-package subscription;
+package actions.subscription;
 
 /**
  * A class that represents an email subscriber entity, allowing for receiving newsletters via provided email.
