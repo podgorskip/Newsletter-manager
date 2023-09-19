@@ -17,12 +17,16 @@ public class SubscriptionForm extends JFrame implements ActionListener {
 
     /**
      * Constructs a SubscriptionForm object and initializes it.
+     * @param callback callback to notify when a button is clicked
      */
     public SubscriptionForm(SubscriptionCallback callback) {
         this.subscriptionCallback = callback;
         initForm();
     }
 
+    /**
+     * Makes the form visible.
+     */
     public void displaySubscriptionForm() {
         setVisible(true);
     }
