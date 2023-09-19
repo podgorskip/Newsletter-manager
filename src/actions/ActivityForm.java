@@ -5,19 +5,35 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * A class that displays available activities to be chosen, including adding subscribers,
+ * removing subscribers, getting current news.
+ */
 public class ActivityForm extends JFrame implements ActionListener {
     private JButton signUpButton, resignButton, showCurrentNewsButton, backButton;
     private final ActivityCallback activityCallback;
 
+    /**
+     * Constructs an ActivityForm object and initializes it.
+     * @param activityCallback callback to notify when a button is clicked
+     */
     public ActivityForm(ActivityCallback activityCallback) {
         this.activityCallback = activityCallback;
         initForm();
     }
 
+    /**
+     * Makes the form visible.
+     */
     public void displayActivityForm() {
         setVisible(true);
     }
 
+    /**
+     * Handles actions chosen by a user via button click.
+     * Sends callback after the confirmation button is clicked.
+     * @param event the event to be processed
+     */
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() == signUpButton) {
@@ -31,6 +47,9 @@ public class ActivityForm extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Initializes the subscription form.
+     */
     private void initForm() {
         GroupLayout layout = new GroupLayout(getContentPane());
         layout.setAutoCreateGaps(true);
