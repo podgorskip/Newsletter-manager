@@ -1,3 +1,5 @@
+package core;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -11,7 +13,7 @@ public class Resources {
     private final String filename;
 
     /**
-     * Constructs a Resources object.
+     * Constructs a core.Resources object.
      * @param filename a filename from which the content is sourced
      */
     public Resources(String filename) {

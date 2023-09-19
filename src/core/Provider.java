@@ -1,6 +1,8 @@
-import subscription.EmailSubscriber;
-import subscription.SmsSubscriber;
-import subscription.Subscriber;
+package core;
+
+import actions.subscription.EmailSubscriber;
+import actions.subscription.SmsSubscriber;
+import actions.subscription.Subscriber;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +19,7 @@ public class Provider {
     private final List<Subscriber> subscribers;
 
     /**
-     * Constructs a Provider object.
+     * Constructs a core.Provider object.
      */
     public Provider() {
         connection = DatabaseConnection.connection;
