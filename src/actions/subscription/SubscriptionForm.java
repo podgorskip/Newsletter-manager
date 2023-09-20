@@ -13,6 +13,7 @@ public class SubscriptionForm extends JFrame implements ActionListener {
     private JTextField firstNameField, lastNameField, mediumField;
     private JRadioButton emailButton, phoneButton;
     private JButton confirmationButton, backButton;
+    private ButtonGroup buttonGroup;
     private final SubscriptionCallback subscriptionCallback;
 
     /**
@@ -68,8 +69,8 @@ public class SubscriptionForm extends JFrame implements ActionListener {
                 }
             }
 
-            subscriptionCallback.onSubscriptionConfirmed(firstName, lastName, medium, type);
             resetFields();
+            subscriptionCallback.onSubscriptionConfirmed(firstName, lastName, medium, type);
 
         } else if (event.getSource() == backButton) {
             dispose();
@@ -110,7 +111,7 @@ public class SubscriptionForm extends JFrame implements ActionListener {
             label.setText("Phone number");
         });
 
-        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup = new ButtonGroup();
         buttonGroup.add(emailButton);
         buttonGroup.add(phoneButton);
 
@@ -171,8 +172,7 @@ public class SubscriptionForm extends JFrame implements ActionListener {
     private void resetFields() {
         firstNameField.setText("");
         lastNameField.setText("");
-        emailButton.setSelected(false);
-        phoneButton.setSelected(false);
+        buttonGroup.clearSelection();
         mediumField.setText("");
     }
 

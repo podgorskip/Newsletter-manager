@@ -1,5 +1,6 @@
 package core;
 
+import actions.subscription.EmailSender;
 import actions.subscription.Subscriber;
 import actions.subscription.SubscriptionCallback;
 import actions.subscription.SubscriptionForm;
@@ -18,7 +19,7 @@ public class NewsletterManager {
     private final Resources resources;
 
     /**
-     * Constructs a core.NewsletterManager object.
+     * Constructs a NewsletterManager object.
      * @param provider an object that handles newsletters delivery
      * @param resources an object that provides the newsletter's content
      */
@@ -27,33 +28,28 @@ public class NewsletterManager {
         this.resources = resources;
     }
 
-    /**
-     * Sends a newsletter content to all the email subscribers.
-     * @throws IOException if there's a resource error
-     */
-    public void sendEmailSubscribers() throws IOException {
-        provider.sendViaEmail(resources.getResource());
-    }
-
-    /**
-     * Sends a newsletter content to all the SMS subscribers.
-     * @throws IOException if there's a resource error
-     */
-    public void sendSmsSubscribers() throws IOException {
-        provider.sendViaSms(resources.getResource());
-    }
-
     public void start() {
         SwingUtilities.invokeLater(() -> {
             ActivityForm activityForm = new ActivityForm(new ActivityCallback() {
                 @Override
                 public void onActivityChosen(Actions action) {
-                    if (action == Actions.ADD_SUBSCRIBER) {
-                        addSubscriber();
-                    } else if (action == Actions.REMOVE_SUBSCRIBER) {
-                        removeSubscriber();
-                    } else if (action == Actions.SHOW_NEWS) {
-                        showCurrentNews();
+
+                    switch (action) {
+                        case ADD_SUBSCRIBER -> { addSubscriber(); }
+                        case REMOVE_SUBSCRIBER -> { removeSubscriber(); }
+                        case SHOW_NEWS -> { showCurrentNews(); }
+                        case SEND_EMAIL -> {
+                            try {
+                                if (sendEmailSubscribers()) {
+                                    String message = "Email newsletter provided.";
+                                    JOptionPane.showMessageDialog(null, message);
+                                }
+                            } catch (IOException e) { throw new RuntimeException(e); }
+                        }
+                        case SEND_SMS -> {
+                            try { sendSmsSubscribers(); }
+                            catch (IOException e) { throw new RuntimeException(e); }
+                        }
                     }
                 }
             });
@@ -64,7 +60,7 @@ public class NewsletterManager {
     }
 
     /**
-     * Adds a new subscriber based on the actions.subscription form.
+     * Adds a new subscriber based on the subscription form.
      */
     private void addSubscriber() {
         SwingUtilities.invokeLater(() -> {
@@ -82,6 +78,25 @@ public class NewsletterManager {
             subscriptionForm.displaySubscriptionForm();
 
         });
+    }
+
+    /**
+     * Sends a newsletter content to all the email subscribers.
+     * @return true if the newsletter is sent successfully, false otherwise
+     * @throws IOException if there's a resource error
+     */
+    private boolean sendEmailSubscribers() throws IOException {
+        String[] content = resources.getResource();
+        return provider.sendViaEmail(content[0], content[1]);
+    }
+
+    /**
+     * Sends a newsletter content to all the SMS subscribers.
+     * @throws IOException if there's a resource error
+     */
+    private void sendSmsSubscribers() throws IOException {
+        String[] content = resources.getResource();
+        provider.sendViaSms(content[0], content[1]);
     }
 
     private void removeSubscriber() {}

@@ -1,5 +1,6 @@
 package core;
 
+import actions.subscription.EmailSender;
 import actions.subscription.EmailSubscriber;
 import actions.subscription.SmsSubscriber;
 import actions.subscription.Subscriber;
@@ -17,34 +18,44 @@ import java.util.List;
 public class Provider {
     private final Connection connection;
     private final List<Subscriber> subscribers;
+    private final String newsletterEmail;
 
     /**
-     * Constructs a core.Provider object.
+     * Constructs a Provider object.
      */
-    public Provider() {
+    public Provider(String newsletterEmail) {
         connection = DatabaseConnection.connection;
         subscribers = new ArrayList<>();
+        this.newsletterEmail = newsletterEmail;
         restoreFromDatabase();
     }
 
     /**
      * Sends specified content to all the email subscribers.
      * @param content a content to be delivered
+     * @param date the newsletter's date
+     * @return true if sent successfully, false otherwise
      */
-    public void sendViaEmail(String content) {
-        subscribers.stream()
+    public boolean sendViaEmail(String content, String date) {
+        List<Subscriber> emailSubscribers = subscribers.stream()
                 .filter(subscriber -> subscriber.getSubscriptionType() == Subscriber.SubscriptionType.EMAIL)
-                .forEach(subscriber -> subscriber.receive(content));
+                .toList();
+
+        List<String> emails = emailSubscribers.stream().map(Subscriber::getContactDetails).toList();
+
+        EmailSender emailSender = new EmailSender(newsletterEmail, emails);
+        emailSubscribers.forEach(subscriber -> subscriber.receive(content, date));
+        return emailSender.send(content, date);
     }
 
     /**
      * Sends specified content to all the SMS subscribers.
      * @param content a content to be delivered
      */
-    public void sendViaSms(String content) {
+    public void sendViaSms(String content, String date) {
        subscribers.stream()
                .filter(subscriber -> subscriber.getSubscriptionType() == Subscriber.SubscriptionType.SMS)
-               .forEach(subscriber -> subscriber.receive(content));
+               .forEach(subscriber -> subscriber.receive(content, date));
     }
 
     /**

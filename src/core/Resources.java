@@ -13,7 +13,7 @@ public class Resources {
     private final String filename;
 
     /**
-     * Constructs a core.Resources object.
+     * Constructs a Resources object.
      * @param filename a filename from which the content is sourced
      */
     public Resources(String filename) {
@@ -21,11 +21,11 @@ public class Resources {
     }
 
     /**
-     * Returns the newsletter's content based on the current date.
-     * @return content of a newsletter
+     * Returns the newsletter's content based on the current date and the date.
+     * @return content of a newsletter and a date
      * @throws IOException if it's unable to read the file
      */
-    public String getResource() throws IOException {
+    public String[] getResource() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         String currentDateStr = new SimpleDateFormat("dd/MM/yy").format(new Date());
 
@@ -55,6 +55,7 @@ public class Resources {
             }
         }
 
-        return stringBuilder.toString();
+        return new String[] { stringBuilder.toString(), currentDateStr };
     }
+
 }

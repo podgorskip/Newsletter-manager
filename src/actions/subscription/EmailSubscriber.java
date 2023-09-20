@@ -24,8 +24,8 @@ public class EmailSubscriber extends Subscriber {
      * @param content a newsletter content
      */
     @Override
-    public void receive(String content) {
-        System.out.println(email + " got:");
+    public void receive(String content, String date) {
+        System.out.println("[" + date + "] " + email + " got:");
         System.out.println(content);
     }
 
@@ -36,6 +36,15 @@ public class EmailSubscriber extends Subscriber {
     @Override
     public SubscriptionType getSubscriptionType() {
         return subscriptionType;
+    }
+
+    /**
+     * Returns the subscriber's email.
+     * @return subscriber's email
+     */
+    @Override
+    public String getContactDetails() {
+        return email;
     }
 }
 

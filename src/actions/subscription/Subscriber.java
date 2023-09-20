@@ -28,11 +28,17 @@ public abstract class Subscriber {
      * An abstract method to be overloaded that manipulates the received newsletter content.
      * @param content newsletter's content
      */
-    public abstract void receive(String content);
+    public abstract void receive(String content, String date);
 
     /**
      * An abstract method to return the specified subscription type.
      * @return a subscription type
      */
     public abstract SubscriptionType getSubscriptionType();
+
+    /**
+     * An abstract method that returns email/phone number depending on the subscriber type.
+     * @return email/phone number
+     */
+    public abstract String getContactDetails();
 }

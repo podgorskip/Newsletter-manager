@@ -24,8 +24,8 @@ public class SmsSubscriber extends Subscriber {
      * @param content a newsletter content
      */
     @Override
-    public void receive(String content) {
-        System.out.println(phoneNumber + " got: ");
+    public void receive(String content, String date) {
+        System.out.println("[" + date + "] " + phoneNumber + " got: ");
         System.out.println(content);
     }
 
@@ -36,5 +36,14 @@ public class SmsSubscriber extends Subscriber {
     @Override
     public SubscriptionType getSubscriptionType() {
         return subscriptionType;
+    }
+
+    /**
+     * Returns the subscriber's phone number.
+     * @return subscriber's phone number
+     */
+    @Override
+    public String getContactDetails() {
+        return phoneNumber;
     }
 }
