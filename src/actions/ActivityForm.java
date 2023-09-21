@@ -80,7 +80,7 @@ public class ActivityForm extends JFrame implements ActionListener {
         sendViaEmailButton = new JButton("Send");
         sendViaEmailButton.addActionListener(this);
 
-        JLabel sendViaSmsLabel = new JLabel("Send via SMS");
+        JLabel sendViaSmsLabel = new JLabel("Send newsletter via SMS");
         sendViaSmsButton = new JButton("Send");
         sendViaSmsButton.addActionListener(this);
 
