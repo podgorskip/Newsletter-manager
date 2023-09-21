@@ -70,13 +70,17 @@ public class Provider {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            subscribers.add(new EmailSubscriber(firstName, lastName, email));
-
             preparedStatement.setString(1, firstName);
             preparedStatement.setString(2, lastName);
             preparedStatement.setString(3, email);
 
-            return preparedStatement.executeUpdate() == 1;
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected == 1) {
+                subscribers.add(new EmailSubscriber(firstName, lastName, email));
+                return true;
+
+            } else { return false; }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,13 +100,17 @@ public class Provider {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            subscribers.add(new SmsSubscriber(firstName, lastName, phoneNumber));
-
             preparedStatement.setString(1, firstName);
             preparedStatement.setString(2, lastName);
             preparedStatement.setString(3, phoneNumber);
 
-            return preparedStatement.executeUpdate() == 1;
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected == 1) {
+                subscribers.add(new SmsSubscriber(firstName, lastName, phoneNumber));
+                return true;
+
+            } else { return false; }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -119,16 +127,16 @@ public class Provider {
         String sql = "DELETE FROM subscribers WHERE email=?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
             preparedStatement.setString(1, email);
+
             int rowsAffected = preparedStatement.executeUpdate();
 
             if (rowsAffected == 1) {
                 subscribers.removeIf(subscriber -> subscriber.getContactDetails().equals(email));
                 return true;
 
-            } else {
-                return false;
-            }
+            } else { return false; }
 
         } catch (SQLException e) {
             e.printStackTrace();
