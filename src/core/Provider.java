@@ -111,6 +111,30 @@ public class Provider {
     }
 
     /**
+     * Removes a subscriber.
+     * @param medium user's email/phone number to be removed
+     * @param type subscription type
+     * @return true if a subscriber is removed correctly, false otherwise
+     */
+    public boolean removeSubscriber(String medium, Subscriber.SubscriptionType type) {
+        String sql = "DELETE FROM subscribers WHERE ?=?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            subscribers.removeIf(subscriber -> subscriber.getContactDetails().equals(medium));
+
+            preparedStatement.setString(1, type == Subscriber.SubscriptionType.EMAIL ? "email" : "phoneNumber");
+            preparedStatement.setString(2, medium);
+
+            return preparedStatement.executeUpdate() == 1;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * Restores information about subscribers from a database.
      */
     private void restoreFromDatabase() {
