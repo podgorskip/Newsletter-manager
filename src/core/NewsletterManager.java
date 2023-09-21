@@ -1,5 +1,6 @@
 package core;
 
+import actions.NewsDisplay;
 import actions.subscription.*;
 import actions.Actions;
 import actions.ActivityForm;
@@ -7,6 +8,8 @@ import actions.ActivityCallback;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * A class that manages subscribers and newsletters delivery.
@@ -84,8 +87,12 @@ public class NewsletterManager {
         SwingUtilities.invokeLater(() -> {
             SubscriptionResignationForm resignationForm = new SubscriptionResignationForm(new SubscriptionResignationCallback() {
                 @Override
-                public void onResignationConfirmed(String medium, Subscriber.SubscriptionType subscriptionType) {
-                    provider.removeSubscriber(medium, subscriptionType);
+                public void onResignationConfirmed(String medium, Subscriber.SubscriptionType type) {
+                    if (type == Subscriber.SubscriptionType.EMAIL) {
+                        provider.removeEmailSubscriber(medium);
+                    } else if (type == Subscriber.SubscriptionType.SMS) {
+                        provider.removeSmsSubscriber(medium);
+                    }
                 }
             });
 
@@ -100,8 +107,9 @@ public class NewsletterManager {
      * @throws IOException if there's a resource error
      */
     private boolean sendEmailSubscribers() throws IOException {
-        String[] content = resources.getResource();
-        return provider.sendViaEmail(content[0], content[1]);
+        String date = new SimpleDateFormat("dd/MM/yy").format(new Date());
+        String content = resources.getResource(date);
+        return provider.sendViaEmail(content, date);
     }
 
     /**
@@ -109,9 +117,18 @@ public class NewsletterManager {
      * @throws IOException if there's a resource error
      */
     private void sendSmsSubscribers() throws IOException {
-        String[] content = resources.getResource();
-        provider.sendViaSms(content[0], content[1]);
+        String date = new SimpleDateFormat("dd/MM/yy").format(new Date());
+        String content = resources.getResource(date);
+        provider.sendViaSms(content, date);
     }
 
-    private void showCurrentNews() {}
+    /**
+     * Displays news from the provided resources.
+     */
+    private void showCurrentNews() {
+        SwingUtilities.invokeLater(() -> {
+            NewsDisplay newsDisplay = new NewsDisplay(resources);
+            newsDisplay.displayNewsInformation();
+        });
+    }
 }
