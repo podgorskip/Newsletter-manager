@@ -25,9 +25,8 @@ public class Resources {
      * @return content of a newsletter and a date
      * @throws IOException if it's unable to read the file
      */
-    public String[] getResource() throws IOException {
+    public String getResource(String date) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        String currentDateStr = new SimpleDateFormat("dd/MM/yy").format(new Date());
 
         boolean foundDate = false;
 
@@ -37,7 +36,7 @@ public class Resources {
             while ((curLine = reader.readLine()) != null) {
                 curLine = curLine.trim();
 
-                if (curLine.equals(currentDateStr)) {
+                if (curLine.equals(date)) {
                     foundDate = true;
                     continue;
                 }
@@ -55,7 +54,7 @@ public class Resources {
             }
         }
 
-        return new String[] { stringBuilder.toString(), currentDateStr };
+        return stringBuilder.toString();
     }
 
 }
