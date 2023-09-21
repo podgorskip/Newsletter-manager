@@ -12,8 +12,6 @@ public class SubscriptionResignationForm extends JFrame implements ActionListene
     private Subscriber.SubscriptionType type;
     private final SubscriptionResignationCallback callback;
     private JTextField mediumField;
-    private JRadioButton emailButton, phoneButton;
-    private ButtonGroup buttonGroup;
     private JButton confirmationButton, backButton;
 
     /**
@@ -41,7 +39,10 @@ public class SubscriptionResignationForm extends JFrame implements ActionListene
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() == confirmationButton) {
             String medium = mediumField.getText().trim();
-            callback.onResignationConfirmed(medium, type);
+
+            if (medium.isEmpty()) { JOptionPane.showMessageDialog(this, "The field cannot be empty."); }
+            else { callback.onResignationConfirmed(medium, type); }
+
         } else if (event.getSource() == backButton) {
             dispose();
         }
@@ -62,19 +63,19 @@ public class SubscriptionResignationForm extends JFrame implements ActionListene
         JLabel infoLabel = new JLabel("To resign from the newsletter subscription choose its type");
         JLabel mediumLabel = new JLabel();
 
-        emailButton = new JRadioButton("Email subscription");
+        JRadioButton emailButton = new JRadioButton("Email subscription");
         emailButton.addActionListener(e -> {
             type = Subscriber.SubscriptionType.EMAIL;
             mediumLabel.setText("Email");
         });
 
-        phoneButton = new JRadioButton("SMS subscription");
+        JRadioButton phoneButton = new JRadioButton("SMS subscription");
         phoneButton.addActionListener(e -> {
             type = Subscriber.SubscriptionType.SMS;
             mediumLabel.setText("Phone number");
         });
 
-        buttonGroup = new ButtonGroup();
+        ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(emailButton);
         buttonGroup.add(phoneButton);
 
