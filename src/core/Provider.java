@@ -5,6 +5,7 @@ import actions.subscription.EmailSubscriber;
 import actions.subscription.SmsSubscriber;
 import actions.subscription.Subscriber;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -63,28 +64,28 @@ public class Provider {
      * @param firstName the new subscriber's first name
      * @param lastName the new subscriber's last name
      * @param email the new subscriber's email
-     * @return true if a subscriber is added correctly, false otherwise
      */
-    public boolean addEmailSubscriber(String firstName, String lastName, String email) {
-        String sql = "INSERT INTO subscribers (firstName, lastName, email) VALUES (?, ?, ?)";
+    public void addEmailSubscriber(String firstName, String lastName, String email) {
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        if (isEmailSubscriptionActive(email)) {
+            JOptionPane.showMessageDialog(null, "Provided email is already signed up for the newsletter.");
 
-            preparedStatement.setString(1, firstName);
-            preparedStatement.setString(2, lastName);
-            preparedStatement.setString(3, email);
+        } else {
 
-            int rowsAffected = preparedStatement.executeUpdate();
+            String sql = "INSERT INTO subscribers (firstName, lastName, email) VALUES (?, ?, ?)";
 
-            if (rowsAffected == 1) {
-                subscribers.add(new EmailSubscriber(firstName, lastName, email));
-                return true;
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            } else { return false; }
+                preparedStatement.setString(1, firstName);
+                preparedStatement.setString(2, lastName);
+                preparedStatement.setString(3, email);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+                int rowsAffected = preparedStatement.executeUpdate();
+
+                if (rowsAffected == 1) { subscribers.add(new EmailSubscriber(firstName, lastName, email)); }
+                else { JOptionPane.showMessageDialog(null, "Failed to update the database"); }
+
+            } catch (SQLException e) { e.printStackTrace(); }
         }
     }
 
@@ -93,80 +94,77 @@ public class Provider {
      * @param firstName the new subscriber's first name
      * @param lastName the new subscriber's last name
      * @param phoneNumber the new subscriber's phone number
-     * @return true if a subscriber is added correctly, false otherwise
      */
-    public boolean addSmsSubscriber(String firstName, String lastName, String phoneNumber) {
-        String sql = "INSERT INTO subscribers (firstName, lastName, phoneNumber) VALUES (?, ?, ?)";
+    public void addSmsSubscriber(String firstName, String lastName, String phoneNumber) {
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        if (isSmsSubscriptionActive(phoneNumber)) {
+            JOptionPane.showMessageDialog(null, "Provided phone number is already signed up for the newsletter.");
 
-            preparedStatement.setString(1, firstName);
-            preparedStatement.setString(2, lastName);
-            preparedStatement.setString(3, phoneNumber);
+        } else {
+            String sql = "INSERT INTO subscribers (firstName, lastName, phoneNumber) VALUES (?, ?, ?)";
 
-            int rowsAffected = preparedStatement.executeUpdate();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            if (rowsAffected == 1) {
-                subscribers.add(new SmsSubscriber(firstName, lastName, phoneNumber));
-                return true;
+                preparedStatement.setString(1, firstName);
+                preparedStatement.setString(2, lastName);
+                preparedStatement.setString(3, phoneNumber);
 
-            } else { return false; }
+                int rowsAffected = preparedStatement.executeUpdate();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+                if (rowsAffected == 1) { subscribers.add(new SmsSubscriber(firstName, lastName, phoneNumber)); }
+                else { JOptionPane.showMessageDialog(null, "Failed to update the database"); }
+
+            } catch (SQLException e) { e.printStackTrace(); }
         }
     }
 
     /**
      * Removes an email subscriber.
      * @param email user's email to be removed from subscribing
-     * @return true if a subscriber is removed correctly, false otherwise
      */
-    public boolean removeEmailSubscriber(String email) {
-        String sql = "DELETE FROM subscribers WHERE email=?";
+    public void removeEmailSubscriber(String email) {
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        if (isEmailSubscriptionActive(email)) {
+            String sql = "DELETE FROM subscribers WHERE email=?";
 
-            preparedStatement.setString(1, email);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            int rowsAffected = preparedStatement.executeUpdate();
+                preparedStatement.setString(1, email);
 
-            if (rowsAffected == 1) {
-                subscribers.removeIf(subscriber -> subscriber.getContactDetails().equals(email));
-                return true;
+                int rowsAffected = preparedStatement.executeUpdate();
 
-            } else { return false; }
+                if (rowsAffected == 1) { subscribers.removeIf(subscriber -> subscriber.getContactDetails().equals(email)); }
+                else { JOptionPane.showMessageDialog(null, "Failed to remove from the database."); }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            } catch (SQLException e) { e.printStackTrace(); }
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Provided email is not signed up for the subscription.");
         }
     }
 
     /**
      * Removes a sms subscriber.
      * @param phoneNumber user's phone number to be removed from subscribing
-     * @return true if a subscriber is removed correctly, false otherwise
      */
-    public boolean removeSmsSubscriber(String phoneNumber) {
-        String sql = "DELETE FROM subscribers WHERE phoneNumber=?";
+    public void removeSmsSubscriber(String phoneNumber) {
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, phoneNumber);
-            int rowsAffected = preparedStatement.executeUpdate();
+        if (isSmsSubscriptionActive(phoneNumber)) {
+            String sql = "DELETE FROM subscribers WHERE phoneNumber=?";
 
-            if (rowsAffected == 1) {
-                subscribers.removeIf(subscriber -> subscriber.getContactDetails().equals(phoneNumber));
-                return true;
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            } else {
-                return false;
-            }
+                preparedStatement.setString(1, phoneNumber);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+                int rowsAffected = preparedStatement.executeUpdate();
+
+                if (rowsAffected == 1) { subscribers.removeIf(subscriber -> subscriber.getContactDetails().equals(phoneNumber)); }
+                else { JOptionPane.showMessageDialog(null, "Failed to remove from the database."); }
+
+            } catch (SQLException e) { e.printStackTrace(); }
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Provided phone number is not signed up for the subscription.");
         }
     }
 
@@ -197,5 +195,29 @@ public class Provider {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * Checks if the provided email is sign up for the newsletter.
+     * @param email an email to be checked
+     * @return true if is signed up, false otherwise
+     */
+    private boolean isEmailSubscriptionActive(String email) {
+        for (Subscriber subscriber : subscribers.stream().filter(subscriber -> subscriber.getSubscriptionType() == Subscriber.SubscriptionType.EMAIL).toList()) {
+            if (subscriber.getContactDetails().equals(email)) { return true; }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the provided phone number is sign up for the newsletter.
+     * @param phoneNumber a phone number to be checked
+     * @return true if is signed up, false otherwise
+     */
+    private boolean isSmsSubscriptionActive(String phoneNumber) {
+        for (Subscriber subscriber : subscribers.stream().filter(subscriber -> subscriber.getSubscriptionType() == Subscriber.SubscriptionType.SMS).toList()) {
+            if (subscriber.getContactDetails().equals(phoneNumber)) { return true; }
+        }
+        return false;
     }
 }
