@@ -111,22 +111,50 @@ public class Provider {
     }
 
     /**
-     * Removes a subscriber.
-     * @param medium user's email/phone number to be removed
-     * @param type subscription type
+     * Removes an email subscriber.
+     * @param email user's email to be removed from subscribing
      * @return true if a subscriber is removed correctly, false otherwise
      */
-    public boolean removeSubscriber(String medium, Subscriber.SubscriptionType type) {
-        String sql = "DELETE FROM subscribers WHERE ?=?";
+    public boolean removeEmailSubscriber(String email) {
+        String sql = "DELETE FROM subscribers WHERE email=?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, email);
+            int rowsAffected = preparedStatement.executeUpdate();
 
-            subscribers.removeIf(subscriber -> subscriber.getContactDetails().equals(medium));
+            if (rowsAffected == 1) {
+                subscribers.removeIf(subscriber -> subscriber.getContactDetails().equals(email));
+                return true;
 
-            preparedStatement.setString(1, type == Subscriber.SubscriptionType.EMAIL ? "email" : "phoneNumber");
-            preparedStatement.setString(2, medium);
+            } else {
+                return false;
+            }
 
-            return preparedStatement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Removes a sms subscriber.
+     * @param phoneNumber user's phone number to be removed from subscribing
+     * @return true if a subscriber is removed correctly, false otherwise
+     */
+    public boolean removeSmsSubscriber(String phoneNumber) {
+        String sql = "DELETE FROM subscribers WHERE phoneNumber=?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, phoneNumber);
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected == 1) {
+                subscribers.removeIf(subscriber -> subscriber.getContactDetails().equals(phoneNumber));
+                return true;
+
+            } else {
+                return false;
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
