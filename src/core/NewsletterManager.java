@@ -1,9 +1,6 @@
 package core;
 
-import actions.subscription.EmailSender;
-import actions.subscription.Subscriber;
-import actions.subscription.SubscriptionCallback;
-import actions.subscription.SubscriptionForm;
+import actions.subscription.*;
 import actions.Actions;
 import actions.ActivityForm;
 import actions.ActivityCallback;
@@ -81,6 +78,23 @@ public class NewsletterManager {
     }
 
     /**
+     * Removes a subscriber based on the resignation form.
+     */
+    private void removeSubscriber() {
+        SwingUtilities.invokeLater(() -> {
+            SubscriptionResignationForm resignationForm = new SubscriptionResignationForm(new SubscriptionResignationCallback() {
+                @Override
+                public void onResignationConfirmed(String medium, Subscriber.SubscriptionType subscriptionType) {
+                    provider.removeSubscriber(medium, subscriptionType);
+                }
+            });
+
+            resignationForm.displaySubscriptionResignationForm();
+
+        });
+    }
+
+    /**
      * Sends a newsletter content to all the email subscribers.
      * @return true if the newsletter is sent successfully, false otherwise
      * @throws IOException if there's a resource error
@@ -99,6 +113,5 @@ public class NewsletterManager {
         provider.sendViaSms(content[0], content[1]);
     }
 
-    private void removeSubscriber() {}
     private void showCurrentNews() {}
 }
