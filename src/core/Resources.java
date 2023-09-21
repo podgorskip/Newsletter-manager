@@ -45,12 +45,14 @@ public class Resources {
                     String nextLine = reader.readLine();
                     if (nextLine != null && nextLine.isEmpty()) {
                         break;
+                    } else {
+                        stringBuilder.append(curLine).append('\n');
+                        stringBuilder.append(nextLine).append('\n');
                     }
-                }
-
-                if (foundDate) {
+                } else if (foundDate) {
                     stringBuilder.append(curLine).append('\n');
                 }
+
             }
         }
 
